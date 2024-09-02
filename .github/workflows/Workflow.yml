@@ -16,7 +16,7 @@ jobs:
       - name: Set environment variable for JSON file
         run: |
           "FILE_PATH_ASSETS=StockOrders.json" | Out-File -FilePath $env:GITHUB_ENV -Append
-	  "FILE_PATH_DATA=StockData.json" | Out-File -FilePath $env:GITHUB_ENV -Append
+
         shell: pwsh
 
       - name: Debug environment variable
