@@ -1,7 +1,6 @@
 import os
 import json
 import random
-import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import time
@@ -111,29 +110,6 @@ class apibot():
 
         with open(file_path, 'w') as f:
             json.dump(data, f, indent=4)
-
-    def plot_data(self, df):
-
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10), gridspec_kw={'height_ratios': [3, 1]})
-        ax1.plot(df.index, df['Close'], label='Close Price')
-        ax1.plot(df.index, df['EMA_8'], label='EMA 8')
-        ax1.plot(df.index, df['EMA_13'], label='EMA 13')
-        ax1.plot(df.index, df['EMA_21'], label='EMA 21')
-        ax1.plot(df.index, df['EMA_55'], label='EMA 55')
-
-        ax1.set_title(f'{"Stock"} Price and SMAs')
-        ax1.legend()
-
-        # Plot RSI op de tweede subplot
-        ax2.plot(df.index, df['RSI'], label='RSI', color='orange')
-        ax2.axhline(70, linestyle='--', alpha=0.5, color='red')
-        ax2.axhline(30, linestyle='--', alpha=0.5, color='green')
-        ax2.set_title('RSI')
-        ax2.legend()
-
-        plt.tight_layout()
-        plt.show()
-
 
     async def get_data(self, market):
 
@@ -336,7 +312,6 @@ class apibot():
                         await self.send_telegram_message(buy_message)
                         self.update_assets(self._file_path_assets, buy_order)
 
-        # self.plot_data(df)
         return df
 
 
