@@ -51,14 +51,14 @@ jobs:
           if ([System.IO.File]::Exists("${{ env.FILE_PATH_ASSETS }}")) {
             git add ${{ env.FILE_PATH_ASSETS }}
             git commit -m "Update ${{ env.FILE_PATH_ASSETS }}"
-            else {
+          } else {
             Write-Output "No changes to commit for FILE_PATH_ASSETS."
           }
 
           if ([System.IO.File]::Exists("${{ env.FILE_PATH_DATA }}")) {
             git add ${{ env.FILE_PATH_DATA }}
             git commit -m "Update ${{ env.FILE_PATH_DATA }}"
-            else {
+          } else {
             Write-Output "No changes to commit for FILE_PATH_DATA."
           }
         env:
