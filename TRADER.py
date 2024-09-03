@@ -13,7 +13,6 @@ import yfinance as yf
 import re
 import requests
 from bs4 import BeautifulSoup
-from itertools import pairwise
 
 
 token = Bot(token='7277331559:AAGtyCZcKJ2UI80U6sqJo5jcjQrHD2BXlB8')
