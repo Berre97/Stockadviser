@@ -15,12 +15,14 @@ jobs:
 
       - name: Set environment variable for JSON file
         run: |
-          "FILE_PATH=CryptoOrders.json" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "FILE_PATH_ASSETS=StockOrders.json" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "FILE_PATH_DATA=StockData.json" | Out-File -FilePath $env:GITHUB_ENV -Append
         shell: pwsh
 
       - name: Debug environment variable
         run: |
-          Write-Output "FILE_PATH is: $env:FILE_PATH"
+          Write-Output "FILE_PATH_ASSETS is: $env:FILE_PATH_ASSETS"
+          Write-Output "FILE_PATH_DATA is: $env:FILE_PATH_DATA"
         shell: pwsh
 
       - name: Install dependencies
@@ -36,8 +38,8 @@ jobs:
         
       - name: Run script
         env:
-          FILE_PATH: ${{ env.FILE_PATH }}
-          API_KEYS: ${{ secrets.APIKEYS }}
+         FILE_PATH_ASSETS: ${{ env.FILE_PATH_ASSETS }}
+         FILE_PATH_DATA: ${{ env.FILE_PATH_DATA }}
         run: |
           python TRADER.py
 
@@ -46,12 +48,18 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git pull origin main
-          if ([System.IO.File]::Exists("${{ env.FILE_PATH }}")) {
-            git add ${{ env.FILE_PATH }}
-            git commit -m "Update ${{ env.FILE_PATH }}"
-            git push
-          } else {
-            Write-Output "No changes to commit."
+          if ([System.IO.File]::Exists("${{ env.FILE_PATH_ASSETS }}")) {
+            git add ${{ env.FILE_PATH_ASSETS }}
+            git commit -m "Update ${{ env.FILE_PATH_ASSETS }}"
+            else {
+            Write-Output "No changes to commit for FILE_PATH_ASSETS."
+          }
+
+          if ([System.IO.File]::Exists("${{ env.FILE_PATH_DATA }}")) {
+            git add ${{ env.FILE_PATH_DATA }}
+            git commit -m "Update ${{ env.FILE_PATH_DATA }}"
+            else {
+            Write-Output "No changes to commit for FILE_PATH_DATA."
           }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
