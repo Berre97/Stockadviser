@@ -1,4 +1,4 @@
-name: Stockadviser
+name: Workflow Kraken
 on:
   schedule:
     - cron: '58 * * *  *' 
@@ -12,17 +12,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-	
+
       - name: Set environment variable for JSON file
         run: |
-          "FILE_PATH_ASSETS=StockOrders.json" | Out-File -FilePath $env:GITHUB_ENV -Append
-          "FILE_PATH_DATA=StockData.json" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "FILE_PATH=CryptoOrders.json" | Out-File -FilePath $env:GITHUB_ENV -Append
         shell: pwsh
-       
+
       - name: Debug environment variable
         run: |
-          Write-Output "FILE_PATH_ASSETS is: $env:FILE_PATH_ASSETS"
-          Write-Output "FILE_PATH_DATA is: $env:FILE_PATH_DATA"
+          Write-Output "FILE_PATH is: $env:FILE_PATH"
         shell: pwsh
 
       - name: Install dependencies
@@ -33,13 +31,13 @@ jobs:
       - name: Delay execution
         run: |
           echo "Waiting for 5 minutes..."
-          Start-Sleep -Seconds 60
+          Start-Sleep -Seconds 60 #240
         shell: pwsh
         
       - name: Run script
         env:
-          FILE_PATH_ASSETS: ${{ env.FILE_PATH_ASSETS }}
-          FILE_PATH_DATA: ${{ env.FILE_PATH_DATA }}
+          FILE_PATH: ${{ env.FILE_PATH }}
+          API_KEYS: ${{ secrets.APIKEYS }}
         run: |
           python TRADER.py
 
@@ -48,18 +46,12 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git pull origin main
-          if ([System.IO.File]::Exists("${{ env.FILE_PATH_ASSETS }}")) {
-            git add ${{ env.FILE_PATH_ASSETS }}
-            git commit -m "Update ${{ env.FILE_PATH_ASSETS }}"
-            else {
-            Write-Output "No changes to commit for FILE_PATH_ASSETS."
-          }
-
-          if ([System.IO.File]::Exists("${{ env.FILE_PATH_DATA }}")) {
-            git add ${{ env.FILE_PATH_DATA }}
-            git commit -m "Update ${{ env.FILE_PATH_DATA }}"
-            else {
-            Write-Output "No changes to commit for FILE_PATH_DATA."
+          if ([System.IO.File]::Exists("${{ env.FILE_PATH }}")) {
+            git add ${{ env.FILE_PATH }}
+            git commit -m "Update ${{ env.FILE_PATH }}"
+            git push
+          } else {
+            Write-Output "No changes to commit."
           }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
