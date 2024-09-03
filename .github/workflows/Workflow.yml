@@ -1,4 +1,4 @@
-name: Workflow Kraken
+name: Workflow Stocks
 on:
   schedule:
     - cron: '58 * * *  *' 
