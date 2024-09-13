@@ -14,6 +14,8 @@ import requests
 from bs4 import BeautifulSoup
 token = Bot(token='7277331559:AAGtyCZcKJ2UI80U6sqJo5jcjQrHD2BXlB8')
 chat_id = -1002203456191
+
+
 class apibot():
     def __init__(self, file_path_assets, file_path_data, markets):
         self._file_path_assets = file_path_assets
