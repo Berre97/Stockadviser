@@ -12,6 +12,7 @@ import os
 import yfinance as yf
 import requests
 from bs4 import BeautifulSoup
+
 token = Bot(token='7277331559:AAGtyCZcKJ2UI80U6sqJo5jcjQrHD2BXlB8')
 chat_id = -1002203456191
 
@@ -87,41 +88,25 @@ class apibot():
         data.append(order)
         with open(file_path, 'w') as f:
             json.dump(data, f, indent=4)
-    def plot_data(self, df):
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10), gridspec_kw={'height_ratios': [3, 1]})
-        ax1.plot(df.index, df['Close'], label='Close Price')
-        ax1.plot(df.index, df['EMA_8'], label='EMA 8')
-        ax1.plot(df.index, df['EMA_13'], label='EMA 13')
-        ax1.plot(df.index, df['EMA_21'], label='EMA 21')
-        ax1.plot(df.index, df['EMA_55'], label='EMA 55')
-        ax1.set_title(f'{"Stock"} Price and SMAs')
-        ax1.legend()
-        # Plot RSI op de tweede subplot
-        ax2.plot(df.index, df['RSI'], label='RSI', color='orange')
-        ax2.axhline(70, linestyle='--', alpha=0.5, color='red')
-        ax2.axhline(30, linestyle='--', alpha=0.5, color='green')
-        ax2.set_title('RSI')
-        ax2.legend()
-        plt.tight_layout()
-        plt.show()
+
     async def get_data(self, market):
         url = f'https://finance.yahoo.com/quote/{market}/'
         page = requests.get(url)
         soup = BeautifulSoup(page.text, 'html.parser')
         response = yf.download(market, period='1y')
         df = response.sort_index()
+        
         df['SMA_50'] = ta.trend.sma_indicator(df['Close'], window=50)
         df['SMA_20'] = ta.trend.sma_indicator(df['Close'], window=20)
         df['SMA_200'] = ta.trend.sma_indicator(df['Close'], window=200)
-        # Relatieve sterkte-index (RSI)
+        
         df['RSI'] = ta.momentum.rsi(df['Close'], window=14)
-        # Moving Average Convergence Divergence (MACD)
         df['MACD'] = ta.trend.macd(df['Close'])
         df['MACD_signal'] = ta.trend.macd_signal(df['Close'])
-        # Bollinger Bands
         bollinger = ta.volatility.BollingerBands(df['Close'], window=20, window_dev=2)
         df['Bollinger_High'] = bollinger.bollinger_hband()
         df['Bollinger_Low'] = bollinger.bollinger_lband()
+        
         df['EMA_8'] = ta.trend.ema_indicator(df['Close'], window=8)
         df['EMA_13'] = ta.trend.ema_indicator(df['Close'], window=13)
         df['EMA_21'] = ta.trend.ema_indicator(df['Close'], window=21)
@@ -129,41 +114,45 @@ class apibot():
         df['EMA_8_above_EMA_13'] = df['EMA_8'] > df['EMA_13']
         df['EMA_13_above_EMA_21'] = df['EMA_13'] > df['EMA_21']
         df['EMA_21_above_EMA_55'] = df['EMA_21'] > df['EMA_55']
+        
         df['EMA_above'] = (df['EMA_8_above_EMA_13'] &
                            df['EMA_13_above_EMA_21'] &
                            df['EMA_21_above_EMA_55']).rolling(window=20).sum() == 20
         df['EMA_below'] = (~df['EMA_8_above_EMA_13'] &
                            ~df['EMA_13_above_EMA_21'] &
                            ~df['EMA_21_above_EMA_55']).rolling(window=20).sum() == 20
+        
         df['volume_MA'] = df['Volume'].rolling(window=20).mean()
         df['Buy Signal Long'] = df['EMA_above']
         df['Buy Signal Short'] = df['EMA_below']
         last_index = df.index[-1]
         last_row = df.iloc[-1]
+        
         # Going long
         indicators_buy_long = df.loc[last_index, ['Buy Signal Long']]
         for col in df.columns:
             if df[col].isnull().any():
                 pass
             else:
-                # Golden Cross / Death Cross
-                # RSI Overbought / Oversold
                 df['RSI_Overbought'] = np.where(df['RSI'] >= 40, True, False)
                 df['RSI_Oversold'] = np.where(df['RSI'] <= 35, True, False)
                 df['Bollinger_Breakout_High'] = np.where((df['Close'] > df['Bollinger_High']), True, False)
                 df['Bollinger_Breakout_Low'] = np.where((df['Close'] < df['Bollinger_Low']), True, False)
                 df['Market'] = market
+                
                 short_ema = df['Close'].ewm(span=12, adjust=False).mean()
                 long_ema = df['Close'].ewm(span=26, adjust=False).mean()
                 df['MACD'] = short_ema - long_ema
                 df['Signal Line'] = df['MACD'].ewm(span=9, adjust=False).mean()
                 # MACD Crossovers
+                
                 df['MACD_Bullish'] = np.where(
                     (df['MACD'] > df['Signal Line']) & (df['MACD'].shift(1) <= df['Signal Line'].shift(1)), True,
                     False)
                 df['MACD_Bearish'] = np.where(
                     (df['MACD'] < df['Signal Line']) & (df['MACD'].shift(1) >= df['Signal Line'].shift(1)), True,
                     False)
+                
         if page.status_code == 200:
             values = soup.find_all('span', class_='value yf-tx3nkj')
             valuation_measures = soup.find_all('p', class_="value yf-1n4vnw8")
@@ -261,16 +250,17 @@ class apibot():
                                         'percentage_gained': percentage}
                         self.update_assets(self._file_path_assets, update_order)
                     
-                    if pe_ratio_ttm < 25 and roe_ttm >= 10 and roa_ttm >= 8 and peg_ratio_5yr < 1.5 and indicators_buy_long:
-                        buy_message = f"Koop stock: {market} Prijs: {current_price}"
-                        order_number = random.randint(100, 999)
-                        buy_order = {'type': 'Bought', 'strategy': 'Long', 'symbol': market,
-                                     'time': str(datetime.now()),
-                                     'price_bought': current_price,
-                                     'order': order_number}
-                        print(buy_order)
-                        await self.send_telegram_message(buy_message)
-                        self.update_assets(self._file_path_assets, buy_order)
+            if pe_ratio_ttm < 25 and roe_ttm >= 10 and roa_ttm >= 8 and peg_ratio_5yr < 1.5 and indicators_buy_long:
+                buy_message = f"Koop stock: {market} Prijs: {current_price}"
+                order_number = random.randint(100, 999)
+                buy_order = {'type': 'Bought', 'strategy': 'Long', 'symbol': market,
+                             'time': str(datetime.now()),
+                             'price_bought': current_price,
+                             'order': order_number}
+                print(buy_order)
+                await self.send_telegram_message(buy_message)
+                self.update_assets(self._file_path_assets, buy_order)
+                
         return df
     async def main(self, bot):
             for i in self._markets:
