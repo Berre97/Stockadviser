@@ -262,23 +262,19 @@ class apibot():
             roa_ttm = metric_values['roa ttm']
             pe_ratio_ttm = metric_values['pe ratio ttm']
 
-            try:
-                eps_ttm = float(eps_ttm.replace(",", ""))
-                trailing_pe = float(trailing_pe.replace(",", ""))
-                forward_pe = float(forward_pe.replace(",", ""))
-                pe_ratio_ttm = float(pe_ratio_ttm.replace(",", ""))
-                peg_ratio_5yr = float(peg_ratio_5yr.replace(",", ""))
-                roe_ttm = float(roe_ttm.replace('%', ""))
-                roa_ttm = float(roa_ttm.replace('%', ""))
-                current_price = float(current_price.replace(",", ""))
+            eps_ttm = float(eps_ttm.replace(",", "")) if eps_ttm is not None else None
+            trailing_pe = float(trailing_pe.replace(",", "")) if trailing_pe is not None else None
+            forward_pe = float(forward_pe.replace(",", "")) if forward_pe is not None else None
+            pe_ratio_ttm = float(pe_ratio_ttm.replace(",", "")) if pe_ratio_ttm is not None else None
+            peg_ratio_5yr = float(peg_ratio_5yr.replace(",", "")) if peg_ratio_5yr is not None else None
+            roe_ttm = float(roe_ttm.replace('%', "")) if roe_ttm is not None else None
+            roa_ttm = float(roa_ttm.replace('%', "")) if roa_ttm is not None else None
+            current_price = float(current_price.replace(",", "")) if current_price is not None else None
 
-            except:
-                pass
-
-                print("Laatste data:")
-                print(last_row, last_index)
-                print(f"PE ratio ttm: {pe_ratio_ttm}\nROE ttm: {roe_ttm}\nROA ttm: {roa_ttm}\nEPS ttm: {eps_ttm}\nPEG_ratio 5y: {peg_ratio_5yr}")
-                print('--------------------------------------------------------')
+            print("Laatste data:")
+            print(last_row, last_index)
+            print(f"PE ratio ttm: {pe_ratio_ttm}\nROE ttm: {roe_ttm}\nROA ttm: {roa_ttm}\nEPS ttm: {eps_ttm}\nPEG_ratio 5y: {peg_ratio_5yr}")
+            print('--------------------------------------------------------')
 
 
             data = {'stock': market, 'date': str(datetime.now()), "eps ttm" : eps_ttm, 'trailing pe': trailing_pe, "forward pe": forward_pe,
