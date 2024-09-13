@@ -18,8 +18,7 @@ token = Bot(token='7277331559:AAGtyCZcKJ2UI80U6sqJo5jcjQrHD2BXlB8')
 chat_id = -1002203456191
 
 class apibot():
-    def __init__(self, file_path_assets, file_path_data, markets):
-        self._file_path_assets = file_path_assets
+    def __init__(self, file_path_data, markets):
         self._file_path_data = file_path_data
         self._markets = markets
         self._list = []
@@ -288,58 +287,58 @@ class apibot():
 
             self.update_data(self._file_path_data, data)
 
-            if self.load_data(self._file_path_assets) is not None:
-                for i in self.load_data(self._file_path_assets):
+            # if self.load_data(self._file_path_assets) is not None:
+            #     for i in self.load_data(self._file_path_assets):
 
-                    if i['type'] == 'Bought' and i['symbol'] == market and i['strategy'] == 'Long' and \
-                         roa_ttm < 8 or roe_ttm < 10 and indicators_buy_long == False:
+            #         if i['type'] == 'Bought' and i['symbol'] == market and i['strategy'] == 'Long' and \
+            #              roa_ttm < 8 or roe_ttm < 10 and indicators_buy_long == False:
 
-                            percentage = (float(current_price) - float(i['price_bought'])) / float(
-                                i['price_bought']) * 100
-                            percentage = round(percentage, 2)
-                            sell_order = {'type': 'Sold', 'symbol': market,
-                                          'order': i['order'],
-                                          'time': str(datetime.now),
-                                          'closing_price': current_price,
-                                          'price_bought': i['price_bought'],
-                                          'date_bought': str(i['date_bought']),
-                                          'percentage_gained': percentage}
+            #                 percentage = (float(current_price) - float(i['price_bought'])) / float(
+            #                     i['price_bought']) * 100
+            #                 percentage = round(percentage, 2)
+            #                 sell_order = {'type': 'Sold', 'symbol': market,
+            #                               'order': i['order'],
+            #                               'time': str(datetime.now),
+            #                               'closing_price': current_price,
+            #                               'price_bought': i['price_bought'],
+            #                               'date_bought': str(i['date_bought']),
+            #                               'percentage_gained': percentage}
 
-                            sell_message = f"Verkoop stock:\n {market} prijs: {current_price} " \
-                                           f"aankoopkoers: {float(i['price_bought'])}\n " \
-                                           f"percentage gained: {percentage}"
+            #                 sell_message = f"Verkoop stock:\n {market} prijs: {current_price} " \
+            #                                f"aankoopkoers: {float(i['price_bought'])}\n " \
+            #                                f"percentage gained: {percentage}"
 
-                            print(sell_order)
-                            await self.send_telegram_message(sell_message)
-                            self.update_assets(self._file_path_assets, sell_order)
+            #                 print(sell_order)
+            #                 await self.send_telegram_message(sell_message)
+            #                 self.update_assets(self._file_path_assets, sell_order)
 
-                    else:
-                        percentage = (float(current_price) - float(i['price_bought'])) / float(
-                            i['price_bought']) * 100
-                        percentage = round(percentage, 2)
-                        update_order = {'type': 'Bought', 'symbol': market,
-                                        'order': i['order'],
-                                        'last_update': str(datetime.now()),
-                                        'closing_price': current_price,
-                                        'price_bought': float(i['price_bought']),
-                                        'date_bought': str(i['date_bought']),
-                                        'percentage_gained': percentage}
+            #         else:
+            #             percentage = (float(current_price) - float(i['price_bought'])) / float(
+            #                 i['price_bought']) * 100
+            #             percentage = round(percentage, 2)
+            #             update_order = {'type': 'Bought', 'symbol': market,
+            #                             'order': i['order'],
+            #                             'last_update': str(datetime.now()),
+            #                             'closing_price': current_price,
+            #                             'price_bought': float(i['price_bought']),
+            #                             'date_bought': str(i['date_bought']),
+            #                             'percentage_gained': percentage}
 
-                        self.update_assets(self._file_path_assets, update_order)
+            #             self.update_assets(self._file_path_assets, update_order)
 
                     
-                    if pe_ratio_ttm < 25 and roe_ttm >= 10 and roa_ttm >= 8 and peg_ratio_5yr < 1.5 and indicators_buy_long:
+            if pe_ratio_ttm < 25 and roe_ttm >= 10 and roa_ttm >= 8 and peg_ratio_5yr < 1.5 and indicators_buy_long:
 
-                        buy_message = f"Koop stock: {market} Prijs: {current_price}"
-                        order_number = random.randint(100, 999)
-                        buy_order = {'type': 'Bought', 'strategy': 'Long', 'symbol': market,
-                                     'time': str(datetime.now()),
-                                     'price_bought': current_price,
-                                     'order': order_number}
+                buy_message = f"Koop stock: {market} Prijs: {current_price}"
+                order_number = random.randint(100, 999)
+                buy_order = {'type': 'Bought', 'strategy': 'Long', 'symbol': market,
+                             'time': str(datetime.now()),
+                             'price_bought': current_price,
+                             'order': order_number}
 
-                        print(buy_order)
-                        await self.send_telegram_message(buy_message)
-                        self.update_assets(self._file_path_assets, buy_order)
+                print(buy_order)
+                await self.send_telegram_message(buy_message)
+                # self.update_assets(self._file_path_assets, buy_order)
 
         return df
 
@@ -352,6 +351,6 @@ class apibot():
 if __name__ == '__main__':
     # file_path_assets = os.getenv('FILE_PATH_ASSETS')
     file_path_data = os.getenv('FILE_PATH_DATA')
-    bot = apibot(file_path_assets=file_path_assets, file_path_data=file_path_data, markets=['BRK-B', 'BRK-A', 'KNSL', 'FLOW.AS', 'GS', 'BAC', 'MS', 'AXP', 'SCHW', 'BLK']) #Financiele diensten
+    bot = apibot(file_path_data=file_path_data, markets=['BRK-B', 'BRK-A', 'KNSL', 'FLOW.AS', 'GS', 'BAC', 'MS', 'AXP', 'SCHW', 'BLK']) #Financiele diensten
     asyncio.run(bot.main(bot))
 
