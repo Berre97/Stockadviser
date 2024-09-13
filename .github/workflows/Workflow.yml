@@ -8,43 +8,46 @@ on:
 jobs:
   manage-data:
     runs-on: windows-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
       - name: Set environment variable for JSON file
         run: |
-          # "FILE_PATH_ASSETS=StockOrders.json" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "FILE_PATH_ASSETS=StockOrders.json" | Out-File -FilePath $env:GITHUB_ENV -Append
           "FILE_PATH_DATA=StockData.json" | Out-File -FilePath $env:GITHUB_ENV -Append
         shell: pwsh
-
       - name: Debug environment variable
         run: |
           Write-Output "FILE_PATH_ASSETS is: $env:FILE_PATH_ASSETS"
           Write-Output "FILE_PATH_DATA is: $env:FILE_PATH_DATA"
         shell: pwsh
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-        
+      
       - name: Run script
         env:
-         # FILE_PATH_ASSETS: ${{ env.FILE_PATH_ASSETS }}
+         FILE_PATH_ASSETS: ${{ env.FILE_PATH_ASSETS }}
          FILE_PATH_DATA: ${{ env.FILE_PATH_DATA }}
         run: |
           python TRADER.py
-
       - name: Commit and push changes if there are any
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git pull origin main
+          if ([System.IO.File]::Exists("${{ env.FILE_PATH_ASSETS }}")) {
+            git add ${{ env.FILE_PATH_ASSETS }}
+            git commit -m "Update ${{ env.FILE_PATH_ASSETS }}"
+            git push
+          } else {
+            Write-Output "No changes to commit for FILE_PATH_ASSETS."
+          }
           if ([System.IO.File]::Exists("${{ env.FILE_PATH_DATA }}")) {
             git add ${{ env.FILE_PATH_DATA }}
             git commit -m "Update ${{ env.FILE_PATH_DATA }}"
+            git push
           } else {
             Write-Output "No changes to commit for FILE_PATH_DATA."
           }
