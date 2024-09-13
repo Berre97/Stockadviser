@@ -253,11 +253,7 @@ class apibot():
                     list_values.append(None)
 
             for metric, value in zip(metric_values, list_values):
-                print(metric, value)
-
                 metric_values[metric] = value
-
-            print(metric_values)
 
             eps_ttm = metric_values['eps ttm']
             trailing_pe = metric_values['trailing pe']
