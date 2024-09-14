@@ -88,7 +88,6 @@ class apibot():
                 print('Error loading json data: {e}')
                 return {}
 
-
     def update_data(self, file_path, order):
 
         if os.path.exists(file_path):
@@ -109,29 +108,7 @@ class apibot():
         with open(file_path, 'w') as f:
             json.dump(data, f, indent=4)
 
-    def plot_data(self, df):
-
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10), gridspec_kw={'height_ratios': [3, 1]})
-        ax1.plot(df.index, df['Close'], label='Close Price')
-        ax1.plot(df.index, df['EMA_8'], label='EMA 8')
-        ax1.plot(df.index, df['EMA_13'], label='EMA 13')
-        ax1.plot(df.index, df['EMA_21'], label='EMA 21')
-        ax1.plot(df.index, df['EMA_55'], label='EMA 55')
-
-        ax1.set_title(f'{"Stock"} Price and SMAs')
-        ax1.legend()
-
-        # Plot RSI op de tweede subplot
-        ax2.plot(df.index, df['RSI'], label='RSI', color='orange')
-        ax2.axhline(70, linestyle='--', alpha=0.5, color='red')
-        ax2.axhline(30, linestyle='--', alpha=0.5, color='green')
-        ax2.set_title('RSI')
-        ax2.legend()
-
-        plt.tight_layout()
-        plt.show()
-
-
+    
     async def get_data(self, market):
 
         url = f'https://finance.yahoo.com/quote/{market}/'
@@ -283,10 +260,12 @@ class apibot():
 
             price_to_book_mrq = float(price_to_book_mrq) if price_to_book_mrq is not None else None
             years_range = years_range.split("-") if years_range is not None else None
-            years_range_min = float(min(years_range)) if years_range is not None else None
-            years_range_max = float(max(years_range)) if years_range is not None else None
+            years_range_min = float(min(years_range).replace(',', "")) if years_range is not None else None
+            years_range_max = float(max(years_range).replace(',', "")) if years_range is not None else None
             profit_margin = float(profit_margin.replace("%", "")) if profit_margin is not None else None
             enterprice_value_ebitda = float(enterprice_value_ebitda) if enterprice_value_ebitda is not None else None
+
+            print(years_range_min)
 
 
             print("Laatste data:")
@@ -294,17 +273,6 @@ class apibot():
             print(f"PE ratio ttm: {pe_ratio_ttm}\nROE ttm: {roe_ttm}\nROA ttm: {roa_ttm}\nEPS ttm: {eps_ttm}\nPEG_ratio 5y: {peg_ratio_5yr}")
             print('--------------------------------------------------------')
 
-
-            data = {'stock': market, 'date': str(datetime.now()), "eps ttm" : eps_ttm,
-                    'trailing pe': trailing_pe, "forward pe": forward_pe,
-                    "p/e ratio ttm": pe_ratio_ttm, "peg ratio 5y": peg_ratio_5yr,
-                    "roe ttm": roe_ttm, "roa ttm": roa_ttm, "price to book ratio mrq": price_to_book_mrq,
-                    "profit margin": profit_margin, "years range min": years_range_min,
-                    "years range max": years_range_max, "enterprise value/ebitda": enterprice_value_ebitda
-
-                    }
-
-            self.update_data(self._file_path_data, data)
 
             if self.load_data(self._file_path_assets) is not None:
                 for order in self.load_data(self._file_path_assets):
@@ -356,33 +324,38 @@ class apibot():
                             self.update_assets(self._file_path_assets, update_order)
 
 
-            if roa_ttm and roa_ttm and pe_ratio_ttm:
-                for i in self.load_data(self._file_path_data)[len(self._markets) - 1:]:
-                    if i['stock'] == market and i['roe ttm'] and i['roa ttm']:
-                        if pe_ratio_ttm < 50 and pe_ratio_ttm <= i['p/e ratio ttm'] * 0.85 and \
-                                roe_ttm >= 10 and roa_ttm >= 8 and last_row['Buy Signal Long']:
+            if self.load_data(self._file_path_data) is not None:
+                if roa_ttm and roa_ttm and pe_ratio_ttm:
+                    for i in self.load_data(self._file_path_data)[len(self._markets) - 1:]:
+                        print(i['roe ttm'])
+                        if i['stock'] == market and i['roe ttm'] and i['roa ttm']:
+                            if pe_ratio_ttm < 50 and pe_ratio_ttm <= i['p/e ratio ttm'] * 0.85 and \
+                                    roe_ttm >= 10 and roa_ttm >= 8 and last_row['Buy Signal Long']:
 
-                            buy_message = f"Koop:\n Stock: {market} Prijs: {current_price}"
-                            order_number = random.randint(100, 999)
-                            buy_order = {'type': 'Bought', 'symbol': market,
-                                         'date_bought': str(datetime.now()),
-                                         'price_bought': current_price,
-                                         'order': order_number}
+                                buy_message = f"Koop:\n Stock: {market} Prijs: {current_price}"
+                                order_number = random.randint(100, 999)
+                                buy_order = {'type': 'Bought', 'symbol': market,
+                                             'date_bought': str(datetime.now()),
+                                             'price_bought': current_price,
+                                             'order': order_number}
 
-                            print(buy_order)
-                            await self.send_telegram_message(buy_message)
-                            self.update_assets(self._file_path_assets, buy_order)
+                                print(buy_order)
+                                await self.send_telegram_message(buy_message)
+                                self.update_assets(self._file_path_assets, buy_order)
 
-        return df
+            data = {'stock': market, 'date': str(datetime.now()), "eps ttm": eps_ttm,
+                    'trailing pe': trailing_pe, "forward pe": forward_pe,
+                    "p/e ratio ttm": pe_ratio_ttm, "peg ratio 5y": peg_ratio_5yr,
+                    "roe ttm": roe_ttm, "roa ttm": roa_ttm, "price to book ratio mrq": price_to_book_mrq,
+                    "profit margin": profit_margin, "years range min": years_range_min,
+                    "years range max": years_range_max, "enterprise value/ebitda": enterprice_value_ebitda
 
+                    }
 
-    async def main(self, bot):
-            for i in self._markets:
-                await bot.get_data(market=i)
+            self.update_data(self._file_path_data, data)
 
 if __name__ == '__main__':
     file_path_assets = os.getenv('FILE_PATH_ASSETS')
-    # file_path_assets = os.getenv('FILE_PATH_ASSETS')
     file_path_data = os.getenv('FILE_PATH_DATA')
     bot = apibot(file_path_assets=file_path_assets, file_path_data=file_path_data, markets=['BRK-B', 'BRK-A', 'KNSL', 'FLOW.AS', 'GS', 'BAC', 'MS', 'AXP', 'SCHW', 'BLK']) #Financiele diensten
     asyncio.run(bot.main(bot))
