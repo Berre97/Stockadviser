@@ -276,7 +276,7 @@ class apibot():
 
             if self.load_data(self._file_path_assets) is not None:
                 for order in self.load_data(self._file_path_assets):
-                    for i in self.load_data(self._file_path_data)[len(self._markets) - 1:]:
+                    for i in self.load_data(self._file_path_data)[-len(self._markets):]:
                         prev_roe_ttm = i['roe ttm']
                         prev_roa_ttm = i['roa ttm']
 
@@ -326,10 +326,10 @@ class apibot():
 
             if self.load_data(self._file_path_data) is not None:
                 if roa_ttm and roa_ttm and pe_ratio_ttm:
-                    for i in self.load_data(self._file_path_data)[len(self._markets) - 1:]:
+                    for i in self.load_data(self._file_path_data)[-len(self._markets):]:
                         print(i['roe ttm'])
                         if i['stock'] == market and i['roe ttm'] and i['roa ttm']:
-                            if pe_ratio_ttm < 50 and pe_ratio_ttm <= i['p/e ratio ttm'] * 0.85 and \
+                            if pe_ratio_ttm < 20 and pe_ratio_ttm <= i['p/e ratio ttm'] * 0.85 and \
                                     roe_ttm >= 10 and roa_ttm >= 8 and last_row['Buy Signal Long']:
 
                                 buy_message = f"Koop:\n Stock: {market} Prijs: {current_price}"
