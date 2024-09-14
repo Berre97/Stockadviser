@@ -157,8 +157,9 @@ class apibot():
             values = soup.find_all('span', class_='value yf-tx3nkj')
             valuation_measures = soup.find_all('p', class_="value yf-1n4vnw8")
             fin_highlights = soup.find_all('p', class_="value yf-lc8fp0")
-            current_price = soup.find('fin-streamer', class_="livePrice yf-mgkamr")
+            current_price = soup.find('span', class_="price yf-15b2o7n")
             current_price = current_price.text.strip()
+            
             metric_values = {"prev close": None, "open": None, "bid": None, "ask": None,
                              "day's range": None, "year's range": None, "volume": None, "avg volume": None,
                              "market cap": None, "beta 5y": None, "pe ratio ttm": None, 'eps ttm': None,
