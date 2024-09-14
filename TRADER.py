@@ -353,6 +353,11 @@ class apibot():
                     }
 
             self.update_data(self._file_path_data, data)
+        return df
+
+    async def main(self, bot):
+            for i in self._markets:
+                await bot.get_data(market=i)
 
 if __name__ == '__main__':
     file_path_assets = os.getenv('FILE_PATH_ASSETS')
