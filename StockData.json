@@ -196,5 +196,104 @@
         "peg ratio 5y": 2.32,
         "roe ttm": 15.2,
         "roa ttm": 3.43
+    },
+    {
+        "stock": "BRK-B",
+        "date": "2024-09-14 06:33:04.953626",
+        "eps ttm": 31.47,
+        "trailing pe": 14.23,
+        "forward pe": 19.34,
+        "pe ratio ttm": 14.22,
+        "peg ratio 5y": null,
+        "roe ttm": 11.82,
+        "roa ttm": 5.08
+    },
+    {
+        "stock": "BRK-A",
+        "date": "2024-09-14 06:33:05.829318",
+        "eps ttm": 47216.13,
+        "trailing pe": 14.6,
+        "forward pe": 19.65,
+        "pe ratio ttm": 14.6,
+        "peg ratio 5y": null,
+        "roe ttm": 11.82,
+        "roa ttm": 5.08
+    },
+    {
+        "stock": "KNSL",
+        "date": "2024-09-14 06:33:06.814079",
+        "eps ttm": 15.91,
+        "trailing pe": 28.74,
+        "forward pe": 25.51,
+        "pe ratio ttm": 28.74,
+        "peg ratio 5y": 1.7,
+        "roe ttm": 34.85,
+        "roa ttm": 7.62
+    },
+    {
+        "stock": "GS",
+        "date": "2024-09-14 06:33:07.845793",
+        "eps ttm": 31.18,
+        "trailing pe": 15.37,
+        "forward pe": 11.72,
+        "pe ratio ttm": 15.36,
+        "peg ratio 5y": 3.26,
+        "roe ttm": 9.49,
+        "roa ttm": 0.7
+    },
+    {
+        "stock": "BAC",
+        "date": "2024-09-14 06:33:08.814804",
+        "eps ttm": 2.85,
+        "trailing pe": 13.56,
+        "forward pe": 10.74,
+        "pe ratio ttm": 13.56,
+        "peg ratio 5y": 1.76,
+        "roe ttm": 8.5,
+        "roa ttm": 0.77
+    },
+    {
+        "stock": "MS",
+        "date": "2024-09-14 06:33:09.721470",
+        "eps ttm": 6.08,
+        "trailing pe": 16.16,
+        "forward pe": 12.92,
+        "pe ratio ttm": 16.16,
+        "peg ratio 5y": 2.94,
+        "roe ttm": 10.4,
+        "roa ttm": 0.89
+    },
+    {
+        "stock": "AXP",
+        "date": "2024-09-14 06:33:10.784767",
+        "eps ttm": 13.4,
+        "trailing pe": 18.21,
+        "forward pe": 16.42,
+        "pe ratio ttm": 18.77,
+        "peg ratio 5y": 1.85,
+        "roe ttm": 34.98,
+        "roa ttm": 3.8
+    },
+    {
+        "stock": "SCHW",
+        "date": "2024-09-14 06:33:12.801310",
+        "eps ttm": 2.4,
+        "trailing pe": 25.88,
+        "forward pe": 15.17,
+        "pe ratio ttm": 25.88,
+        "peg ratio 5y": 0.9,
+        "roe ttm": 11.99,
+        "roa ttm": 1.01
+    },
+    {
+        "stock": "BLK",
+        "date": "2024-09-14 06:33:13.708264",
+        "eps ttm": 40.3,
+        "trailing pe": 21.99,
+        "forward pe": 18.83,
+        "pe ratio ttm": 21.98,
+        "peg ratio 5y": 2.32,
+        "roe ttm": 15.2,
+        "roa ttm": 3.43
     }
 ]
