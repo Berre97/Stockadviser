@@ -323,7 +323,7 @@ class apibot():
 
                             self.update_assets(self._file_path_assets, update_order)
 
-            days = 80
+            days = 100
             dict = {'p/e ratio ttm': []}
             if self.load_data(self._file_path_data) is not None:
                 if roa_ttm and roa_ttm and pe_ratio_ttm:
