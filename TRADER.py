@@ -372,5 +372,6 @@ class apibot():
 if __name__ == '__main__':
     file_path_assets = os.getenv('FILE_PATH_ASSETS')
     file_path_data = os.getenv('FILE_PATH_DATA')
-    bot = apibot(file_path_assets=file_path_assets, file_path_data=file_path_data, markets=['BRK-B', 'BRK-A', 'KNSL', 'FLOW.AS', 'GS', 'BAC', 'MS', 'AXP', 'SCHW', 'BLK']) #Financiele diensten
+    bot = apibot(file_path_assets=file_path_assets, file_path_data=file_path_data, markets=['BRK-B', 'BRK-A', 'KNSL', 'FLOW.AS', 'GS', 'BAC', 'MS', 'AXP', 'SCHW', 'BLK',
+                                                                                            'ZAL.DE', 'AMZN', 'KNSL', 'META', 'ENX']) #Financiele diensten tot BLK
     asyncio.run(bot.main(bot))
