@@ -323,25 +323,35 @@ class apibot():
 
                             self.update_assets(self._file_path_assets, update_order)
 
-
+            days = 80
+            dict = {'p/e ratio ttm': []}
             if self.load_data(self._file_path_data) is not None:
                 if roa_ttm and roa_ttm and pe_ratio_ttm:
-                    for i in self.load_data(self._file_path_data)[-len(self._markets):]:
-                        print(i['roe ttm'])
-                        if i['stock'] == market and i['roe ttm'] and i['roa ttm']:
-                            if pe_ratio_ttm < 20 and pe_ratio_ttm <= i['p/e ratio ttm'] * 0.85 and \
-                                    roe_ttm >= 10 and roa_ttm >= 8 and last_row['Buy Signal Long']:
+                    print(len(self.load_data(self._file_path_data)))
+                    print(len(self._markets))
+                    if len(self.load_data(self._file_path_data)) >= days * len(self._markets):
+                        for i in self.load_data(self._file_path_data)[-len(self._markets) * days:]:
+                            if i['stock'] == market and i['roe ttm'] and i['roa ttm']:
+                                dict['p/e ratio ttm'].append(i['p/e ratio ttm'])
 
-                                buy_message = f"Koop:\n Stock: {market} Prijs: {current_price}"
-                                order_number = random.randint(100, 999)
-                                buy_order = {'type': 'Bought', 'symbol': market,
-                                             'date_bought': str(datetime.now()),
-                                             'price_bought': current_price,
-                                             'order': order_number}
+            
+            if dict['p/e ratio ttm']:
+                print(dict)
+                max_pe_ratio = max(dict['p/e ratio ttm'])
+                pe_ratio_drop = max_pe_ratio * 0.2
+                if pe_ratio_ttm < 50 and pe_ratio_ttm <= pe_ratio_drop and \
+                        roe_ttm >= 10 and roa_ttm >= 8 and last_row['Buy Signal Long']:
 
-                                print(buy_order)
-                                await self.send_telegram_message(buy_message)
-                                self.update_assets(self._file_path_assets, buy_order)
+                    buy_message = f"Koop:\n Stock: {market} Prijs: {current_price}"
+                    order_number = random.randint(100, 999)
+                    buy_order = {'type': 'Bought', 'symbol': market,
+                                 'date_bought': str(datetime.now()),
+                                 'price_bought': current_price,
+                                 'order': order_number}
+
+                    print(buy_order)
+                    await self.send_telegram_message(buy_message)
+                    self.update_assets(self._file_path_assets, buy_order)
 
             data = {'stock': market, 'date': str(datetime.now()), "eps ttm": eps_ttm,
                     'trailing pe': trailing_pe, "forward pe": forward_pe,
