@@ -353,7 +353,7 @@ class apibot():
                     await self.send_telegram_message(buy_message)
                     self.update_assets(self._file_path_assets, buy_order)
 
-            data = {'stock': market, 'date': str(datetime.now()), "eps ttm": eps_ttm,
+            data = {'stock': market, 'date': str(datetime.now()), 'current price': current_price, "eps ttm": eps_ttm,
                     'trailing pe': trailing_pe, "forward pe": forward_pe,
                     "p/e ratio ttm": pe_ratio_ttm, "peg ratio 5y": peg_ratio_5yr,
                     "roe ttm": roe_ttm, "roa ttm": roa_ttm, "price to book ratio mrq": price_to_book_mrq,
