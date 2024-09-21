@@ -323,7 +323,7 @@ class apibot():
 
                             self.update_assets(self._file_path_assets, update_order)
 
-            days = 100
+            days = 1 #100
             dict = {'p/e ratio ttm': []}
             if self.load_data(self._file_path_data) is not None:
                 if roa_ttm and roa_ttm and pe_ratio_ttm:
@@ -338,7 +338,7 @@ class apibot():
             if dict['p/e ratio ttm']:
                 print(dict)
                 max_pe_ratio = max(dict['p/e ratio ttm'])
-                pe_ratio_drop = max_pe_ratio * 0.2
+                pe_ratio_drop = max_pe_ratio * 0.1 #0.2
                 if pe_ratio_ttm < 50 and pe_ratio_ttm <= pe_ratio_drop and \
                         roe_ttm >= 10 and roa_ttm >= 8 and last_row['Buy Signal Long']:
 
@@ -372,6 +372,6 @@ class apibot():
 if __name__ == '__main__':
     file_path_assets = os.getenv('FILE_PATH_ASSETS')
     file_path_data = os.getenv('FILE_PATH_DATA')
-    bot = apibot(file_path_assets=file_path_assets, file_path_data=file_path_data, markets=['BRK-B', 'BRK-A', 'KNSL', 'FLOW.AS', 'GS', 'BAC', 'MS', 'AXP', 'SCHW', 'BLK',
-                                                                                            'ZAL.DE', 'AMZN', 'KNSL', 'META', 'ENX']) #Financiele diensten tot BLK
+    bot = apibot(file_path_assets=file_path_assets, file_path_data=file_path_data, markets=['ACKB.BR', 'ADYEN.AS, 'CRWD, 'TTD'])
+
     asyncio.run(bot.main(bot))
