@@ -247,8 +247,6 @@ class apibot():
             profit_margin = metric_values['profit margin']
             enterprice_value_ebitda = metric_values["enterp value_to_ebitda"]
 
-
-
             eps_ttm = float(eps_ttm.replace(",", "")) if eps_ttm is not None else None
             trailing_pe = float(trailing_pe.replace(",", "")) if trailing_pe is not None else None
             forward_pe = float(forward_pe.replace(",", "")) if forward_pe is not None else None
@@ -264,9 +262,6 @@ class apibot():
             years_range_max = float(max(years_range).replace(',', "")) if years_range is not None else None
             profit_margin = float(profit_margin.replace("%", "")) if profit_margin is not None else None
             enterprice_value_ebitda = float(enterprice_value_ebitda) if enterprice_value_ebitda is not None else None
-
-            print(years_range_min)
-
 
             print("Laatste data:")
             print(last_row, last_index)
@@ -323,12 +318,10 @@ class apibot():
 
                             self.update_assets(self._file_path_assets, update_order)
 
-            days = 1 #100
+            days = 5 #100
             dict = {'p/e ratio ttm': []}
             if self.load_data(self._file_path_data) is not None:
                 if roa_ttm and roa_ttm and pe_ratio_ttm:
-                    print(len(self.load_data(self._file_path_data)))
-                    print(len(self._markets))
                     if len(self.load_data(self._file_path_data)) >= days * len(self._markets):
                         for i in self.load_data(self._file_path_data)[-len(self._markets) * days:]:
                             if i['stock'] == market and i['roe ttm'] and i['roa ttm']:
@@ -336,7 +329,6 @@ class apibot():
 
             
             if dict['p/e ratio ttm']:
-                print(dict)
                 max_pe_ratio = max(dict['p/e ratio ttm'])
                 pe_ratio_drop = max_pe_ratio * 0.1 #0.2
                 if pe_ratio_ttm < 50 and pe_ratio_ttm <= pe_ratio_drop and \
@@ -363,6 +355,7 @@ class apibot():
                     }
 
             self.update_data(self._file_path_data, data)
+            
         return df
 
     async def main(self, bot):
