@@ -190,6 +190,7 @@ class apibot():
         if page.status_code == 200:
 
             values = soup.find_all('span', class_='value yf-tx3nkj')
+            values2 = soup.find_all('span', class_= 'value yf-mrt107')
             valuation_measures = soup.find_all('p', class_="value yf-1n4vnw8")
             fin_highlights = soup.find_all('p', class_="value yf-lc8fp0")
             current_price = soup.find('span', class_="price yf-15b2o7n")
@@ -207,20 +208,22 @@ class apibot():
 
             list_values = []
 
-            for value in values:
-                value = value.text.strip()
-                if value != "--":
-                    list_values.append(value)
-                else:
-                    list_values.append(None)
+            if values:
+                for value in values:
+                    value = value.text.strip()
+                    if value != "--":
+                        list_values.append(value)
+                    else:
+                        list_values.append(None)
 
 
-            for i in valuation_measures:
-                i = i.text.strip()
-                if i != "--":
-                    list_values.append(i)
-                else:
-                    list_values.append(None)
+            elif values2:
+                for value in values2:
+                    value = value.text.strip()
+                    if value != "--":
+                        list_values.append(value)
+                    else:
+                        list_values.append(None)
 
 
             for i in fin_highlights:
