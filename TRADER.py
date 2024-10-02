@@ -238,7 +238,7 @@ class apibot():
                 metric_values[metric] = value
                 
 
-            print(list_values)
+            print(metric_values)
             eps_ttm = metric_values['eps ttm']
             trailing_pe = metric_values['trailing pe']
             forward_pe = metric_values['forward pe']
