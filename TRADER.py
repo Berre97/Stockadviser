@@ -331,14 +331,13 @@ class apibot():
 
                             self.update_assets(self._file_path_assets, update_order)
 
-            days = 5 #100
+            days = 100
             dict = {'p/e ratio ttm': []}
             if self.load_data(self._file_path_data) is not None:
-                if roa_ttm and roa_ttm and pe_ratio_ttm:
-                    if len(self.load_data(self._file_path_data)) >= days * len(self._markets):
-                        for i in self.load_data(self._file_path_data)[-len(self._markets) * days:]:
-                            if i['stock'] == market and i['roe ttm'] and i['roa ttm']:
-                                dict['p/e ratio ttm'].append(i['p/e ratio ttm'])
+                if len(self.load_data(self._file_path_data)) >= days * len(self._markets):
+                    for i in self.load_data(self._file_path_data)[-len(self._markets) * days:]:
+                        if i['stock'] == market and i['roe ttm'] and i['roa ttm']:
+                            dict['p/e ratio ttm'].append(i['p/e ratio ttm'])
 
             
             if dict['p/e ratio ttm']:
