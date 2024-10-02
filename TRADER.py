@@ -225,7 +225,7 @@ class apibot():
                     else:
                         list_values.append(None)
 
-
+            
             for i in fin_highlights:
                 i = i.text.strip()
                 if i != "--":
@@ -236,8 +236,9 @@ class apibot():
 
             for metric, value in zip(metric_values, list_values):
                 metric_values[metric] = value
+                
 
-
+            print(list_values)
             eps_ttm = metric_values['eps ttm']
             trailing_pe = metric_values['trailing pe']
             forward_pe = metric_values['forward pe']
