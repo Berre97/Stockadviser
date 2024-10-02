@@ -262,9 +262,6 @@ class apibot():
             profit_margin = metric_values['profit margin']
             enterprice_value_ebitda = metric_values["enterp value_to_ebitda"]
 
-            print(market)
-            print(metric_values)
-
             eps_ttm = float(eps_ttm.replace(",", "")) if eps_ttm is not None else None
             trailing_pe = float(trailing_pe.replace(",", "")) if trailing_pe is not None else None
             forward_pe = float(forward_pe.replace(",", "")) if forward_pe is not None else None
