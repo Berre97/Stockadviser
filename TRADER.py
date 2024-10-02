@@ -188,15 +188,18 @@ class apibot():
                     False)
 
         if page.status_code == 200:
-
             values = soup.find_all('span', class_='value yf-tx3nkj')
             values2 = soup.find_all('span', class_= 'value yf-mrt107')
             valuation_measures = soup.find_all('p', class_="value yf-1n4vnw8")
             fin_highlights = soup.find_all('p', class_="value yf-lc8fp0")
             current_price = soup.find('span', class_="price yf-15b2o7n")
 
-            current_price = current_price.text.strip()
+            try:
+                current_price = current_price.text.strip()
 
+            except AttributeError:
+                print(f'Kon prijs niet ophalen voor stock: {market}')
+                current_price = None
 
             metric_values = {"prev close": None, "open": None, "bid": None, "ask": None,
                              "day's range": None, "year's range": None, "volume": None, "avg volume": None,
@@ -208,6 +211,7 @@ class apibot():
 
             list_values = []
 
+            
             if values:
                 for value in values:
                     value = value.text.strip()
@@ -225,7 +229,15 @@ class apibot():
                     else:
                         list_values.append(None)
 
-            
+
+            for i in valuation_measures:
+                i = i.text.strip()
+                if i != "--":
+                    list_values.append(i)
+                else:
+                    list_values.append(None)
+
+
             for i in fin_highlights:
                 i = i.text.strip()
                 if i != "--":
@@ -236,9 +248,8 @@ class apibot():
 
             for metric, value in zip(metric_values, list_values):
                 metric_values[metric] = value
-                
 
-            print(metric_values)
+
             eps_ttm = metric_values['eps ttm']
             trailing_pe = metric_values['trailing pe']
             forward_pe = metric_values['forward pe']
@@ -250,6 +261,9 @@ class apibot():
             years_range = metric_values["year's range"]
             profit_margin = metric_values['profit margin']
             enterprice_value_ebitda = metric_values["enterp value_to_ebitda"]
+
+            print(market)
+            print(metric_values)
 
             eps_ttm = float(eps_ttm.replace(",", "")) if eps_ttm is not None else None
             trailing_pe = float(trailing_pe.replace(",", "")) if trailing_pe is not None else None
@@ -267,11 +281,11 @@ class apibot():
             profit_margin = float(profit_margin.replace("%", "")) if profit_margin is not None else None
             enterprice_value_ebitda = float(enterprice_value_ebitda) if enterprice_value_ebitda is not None else None
 
+
             print("Laatste data:")
             print(last_row, last_index)
             print(f"PE ratio ttm: {pe_ratio_ttm}\nROE ttm: {roe_ttm}\nROA ttm: {roa_ttm}\nEPS ttm: {eps_ttm}\nPEG_ratio 5y: {peg_ratio_5yr}")
             print('--------------------------------------------------------')
-
 
             if self.load_data(self._file_path_assets) is not None:
                 for order in self.load_data(self._file_path_assets):
