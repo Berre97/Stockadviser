@@ -313,8 +313,6 @@ class apibot():
                                             'date_bought': str(order['date_bought']),
                                             'percentage_gained': percentage}
 
-                            print(update_order)
-
                             update_message = f"Update:\n {market} prijs: {current_price} " \
                                              f"aankoopkoers: {float(order['price_bought'])}\n " \
                                              f"percentage gained: {percentage}"
