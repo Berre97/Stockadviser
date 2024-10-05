@@ -1,7 +1,7 @@
 name: Workflow Stocks
 on:
   schedule:
-    - cron: '10 12 * * 1-5' 
+    - cron: '30 16 * * 1-5' 
 
   workflow_dispatch: 
 
